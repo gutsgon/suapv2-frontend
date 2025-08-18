@@ -23,10 +23,9 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("http://localhost:3333/disciplinas_por_curso");
+        const res = await fetch("http://localhost:3333/api/disciplinas_por_curso");
         const json = await res.json();
 
-        // Transforma BigInt em number, se necessário
         const parsed = json.map((item: any) => ({
           nome_curso: item.nome_curso,
           quantidade_disciplinas: Number(item.quantidade_disciplinas),
@@ -43,22 +42,31 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">Disciplinas por Curso</h1>
+      {/* Container centralizado com grid */}
+      <div className="w-full max-w-4xl grid grid-rows-[auto_1fr] place-items-center gap-4">
+        {/* Título centralizado */}
+        <h2 style={{ textAlign: 'center', color: '#111111ff' }}>Quantidade de Disciplinas por Curso</h2>
 
-      <div className="w-full max-w-4xl h-[500px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            layout="vertical"
-            data={data}
-            margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis dataKey="nome_curso" type="category" />
-            <Tooltip />
-            <Bar dataKey="quantidade_disciplinas" fill="#6366f1" />
-          </BarChart>
-        </ResponsiveContainer>
+        {/* Gráfico */}
+        <div className="w-full h-[500px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              layout="vertical"
+              data={data}
+              margin={{ top: 20, right: 30, left: 0, bottom: 20 }} // remove deslocamento extra
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" />
+              <YAxis
+                dataKey="nome_curso"
+                type="category"
+                width={150} // espaço fixo para os nomes dos cursos
+              />
+              <Tooltip />
+              <Bar dataKey="quantidade_disciplinas" fill="#6366f1" barSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
